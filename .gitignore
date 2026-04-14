@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.pyc
+avtoshop.db
+.pytest_cache/
+.mypy_cache/

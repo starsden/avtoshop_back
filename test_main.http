@@ -1,0 +1,77 @@
+@host = http://127.0.0.1:5000
+@email = admin@avtoshop.local
+@password = ChangeMe123!
+@token = replace-with-token
+
+### Health
+GET {{host}}/
+Accept: application/json
+
+### Login (valid admin credentials)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### List services (normalized)
+GET {{host}}/api/services
+Accept: application/json
+
+### Create service (requires Bearer token)
+POST {{host}}/api/services
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Brake Inspection",
+  "icon": "Shield",
+  "description": "Detailed brake wear and hydraulic checks.",
+  "price": "from $60"
+}
+
+### Update service (requires Bearer token)
+PUT {{host}}/api/services/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Brake Inspection Plus",
+  "icon": "ShieldCheck",
+  "description": "Brake diagnostics with detailed recommendations.",
+  "price": "from $70"
+}
+
+### Delete service (requires Bearer token)
+DELETE {{host}}/api/services/1
+Authorization: Bearer {{token}}
+
+### Legacy list route (compatibility alias)
+GET {{host}}/api/posts
+Accept: application/json
+
+### List reviews
+GET {{host}}/api/reviews
+Accept: application/json
+
+### Create review
+POST {{host}}/api/reviews
+Content-Type: application/json
+
+{
+  "name": "Client",
+  "text": "Service was fast and transparent.",
+  "rating": 5
+}
+
+### Invalid review (rating must be 1..5)
+POST {{host}}/api/reviews
+Content-Type: application/json
+
+{
+  "name": "Client",
+  "text": "Bad payload example.",
+  "rating": 9
+}
