@@ -1,0 +1,12 @@
+{
+  "name": "avtoshop-back-cloudflare",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/containers": "^0.0.20",
+    "wrangler": "^4.68.0"
+  }
+}
