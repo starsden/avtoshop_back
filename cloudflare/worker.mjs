@@ -1,7 +1,5 @@
 import { env } from "cloudflare:workers";
-import { Container, ContainerProxy, getContainer } from "@cloudflare/containers";
-
-export { ContainerProxy };
+import { Container, getContainer } from "@cloudflare/containers";
 
 export class AvtoShopApiContainer extends Container {
   defaultPort = 5000;
