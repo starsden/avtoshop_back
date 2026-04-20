@@ -60,10 +60,14 @@ jobs:
             export API_IMAGE="ghcr.io/${REPO}:latest"
             APP_DIR="${{ secrets.SERVER_APP_DIR }}"
             if [ -z "$APP_DIR" ]; then
-              APP_DIR="/opt/avtoshop_back"
+              APP_DIR="$HOME/avtoshop_back"
             fi
 
-            mkdir -p "$APP_DIR"
+            if ! mkdir -p "$APP_DIR"; then
+              echo "No write access to $APP_DIR, fallback to $HOME/avtoshop_back"
+              APP_DIR="$HOME/avtoshop_back"
+              mkdir -p "$APP_DIR"
+            fi
             cd "$APP_DIR"
 
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
