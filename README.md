@@ -72,28 +72,26 @@ If you also run the app outside Docker, switch `DATABASE_URL` back to a local pa
 
 Use `test_main.http` to run login, service CRUD, review submit/list, and validation error scenarios.
 
-## Cloudflare deployment
+## Server deployment (GitHub Actions + Docker)
 
-This repository includes a GitHub Actions deployment workflow at `.github/workflows/deploy-main.yml`.
+This repository includes workflow `.github/workflows/deploy.yml`.
 
-What it does:
-- triggers on every push to `main`
-- validates the Python app
-- builds the Docker image
-- runs `wrangler deploy` to deploy a Cloudflare Worker that proxies requests to the containerized FastAPI app
+What it does on each push to `main`:
+- builds and pushes API image to `ghcr.io`
+- connects to your server over SSH
+- generates production `.env` with SQLite path `sqlite:////data/avtoshop.db`
+- runs API container via `docker compose -f docker-compose.prod.yml up -d`
+
+The SQLite file is stored in Docker volume `avtoshop_data` (mounted at `/data`) and survives container recreation.
 
 Required GitHub repository secrets:
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
+- `SERVER_HOST`
+- `SERVER_USER`
+- `SERVER_PASSWORD`
+- `SERVER_APP_DIR` (optional, default `/opt/avtoshop_back`)
+- `GHCR_USERNAME`
+- `GHCR_TOKEN`
 - `JWT_SECRET`
 - `CORS_ORIGINS`
 - `SEED_ADMIN_EMAIL`
 - `SEED_ADMIN_PASSWORD`
-
-Cloudflare-specific files:
-- `wrangler.jsonc`
-- `cloudflare/worker.mjs`
-
-Current limitation:
-- production data is still configured with SQLite at `sqlite:////tmp/avtoshop.db`
-- this is suitable only as a temporary deployment setup and is not durable across container replacement or rollout
